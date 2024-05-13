@@ -2,23 +2,25 @@ package mz.org.fgh.mentoring.dto.tutor;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import mz.org.fgh.mentoring.base.BaseEntityDTO;
 import mz.org.fgh.mentoring.dto.employee.EmployeeDTO;
 import mz.org.fgh.mentoring.dto.tutorProgrammaticArea.TutorProgrammaticAreaDTO;
-import mz.org.fgh.mentoring.entity.programaticarea.ProgrammaticArea;
 import mz.org.fgh.mentoring.entity.tutor.Tutor;
 import mz.org.fgh.mentoring.entity.tutorprogramaticarea.TutorProgrammaticArea;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.micronaut.core.annotation.Creator;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class TutorDTO extends BaseEntityDTO {
     private EmployeeDTO employeeDTO;
     private List<TutorProgrammaticAreaDTO> tutorProgrammaticAreaDTOS;
+
+    @Creator
+    public TutorDTO() {}
 
     public TutorDTO(Tutor tutor) {
         super(tutor);

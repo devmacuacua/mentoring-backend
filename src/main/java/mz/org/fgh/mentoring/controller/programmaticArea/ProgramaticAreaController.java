@@ -1,9 +1,9 @@
 package mz.org.fgh.mentoring.controller.programmaticArea;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,9 +52,9 @@ public class ProgramaticAreaController extends BaseController {
 
     @Post(  consumes = MediaType.APPLICATION_JSON,
             produces = MediaType.APPLICATION_JSON)
-    public ProgrammaticArea create(@Body ProgrammaticArea programaticArea){
+    public ProgrammaticArea create(@Body ProgrammaticArea programaticArea, Authentication authentication){
 
-        return this.programaticAreaService.createProgrammaticArea(programaticArea);
+        return this.programaticAreaService.createProgrammaticArea(programaticArea,  (Long) authentication.getAttributes().get("userInfo"));
     }
 
     @Put(   consumes = MediaType.APPLICATION_JSON,

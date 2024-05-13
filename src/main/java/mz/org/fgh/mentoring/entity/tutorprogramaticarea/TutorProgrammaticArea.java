@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 public class TutorProgrammaticArea extends BaseEntity {
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tutor_id", nullable = false)
     private Tutor tutor;
 

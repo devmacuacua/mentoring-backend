@@ -24,7 +24,6 @@ public class ProgrammaticAreaDTO extends BaseEntityDTO implements Serializable {
 
     private ProgramDTO program;
 
-    private ProgramDTO programDTO;
     public ProgrammaticAreaDTO() {}
     public ProgrammaticAreaDTO(ProgrammaticArea programmaticArea) {
         super(programmaticArea);
@@ -55,7 +54,6 @@ public class ProgrammaticAreaDTO extends BaseEntityDTO implements Serializable {
                 ", description='" + description + '\'' +
                 ", name='" + name + '\'' +
                 ", program=" + program +
-                ", programDTO=" + programDTO +
                 '}';
     }
 }

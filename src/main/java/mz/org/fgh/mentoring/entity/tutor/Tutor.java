@@ -33,7 +33,7 @@ public class Tutor extends BaseEntity {
 
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tutor")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "tutor")
     private List<TutorProgrammaticArea> tutorProgrammaticAreas = new ArrayList<>();
 
     @Creator

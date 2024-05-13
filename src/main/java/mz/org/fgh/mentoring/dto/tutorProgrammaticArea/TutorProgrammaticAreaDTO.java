@@ -1,18 +1,14 @@
 package mz.org.fgh.mentoring.dto.tutorProgrammaticArea;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Creator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mz.org.fgh.mentoring.base.BaseEntityDTO;
 import mz.org.fgh.mentoring.dto.programmaticarea.ProgrammaticAreaDTO;
 import mz.org.fgh.mentoring.dto.tutor.TutorDTO;
-import mz.org.fgh.mentoring.entity.form.Form;
 import mz.org.fgh.mentoring.entity.tutorprogramaticarea.TutorProgrammaticArea;
 import mz.org.fgh.mentoring.util.LifeCycleStatus;
 
-import java.io.Serializable;
 import java.util.Date;
 
 @Data
