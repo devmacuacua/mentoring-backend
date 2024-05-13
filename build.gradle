@@ -3,12 +3,23 @@ plugins {
     id("io.micronaut.application") version "3.7.7"
 }
 
-version = "0.1"
+version = "1.1"
 group = "mz.org.fgh"
 
 repositories {
     mavenCentral()
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'mz.org.fgh.Application'
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
 
 dependencies {
     annotationProcessor("org.projectlombok:lombok")

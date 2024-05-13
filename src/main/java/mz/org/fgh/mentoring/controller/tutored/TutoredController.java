@@ -8,9 +8,9 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Patch;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
@@ -31,9 +31,7 @@ import mz.org.fgh.mentoring.util.Utilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.PersistenceException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,12 +107,18 @@ public class TutoredController extends BaseController {
     @Operation(summary = "Save Mentorados to database")
     @Tag(name = "mentorados")
     @ApiResponse(content = @Content(mediaType = MediaType.APPLICATION_JSON))
-    @Put("/update")
-    public TutoredDTO updateTutored(@Body TutoredDTO tutoredDTO , Authentication authentication){
-
-        TutoredDTO respo = this.tutoredService.updateTutored(tutoredDTO, (Long) authentication.getAttributes().get("userInfo"));
-
-        return respo;
+    @Patch("/update")
+    public HttpResponse<RestAPIResponse> updateTutored(@Body TutoredDTO tutoredDTO , Authentication authentication){
+        try {
+            TutoredDTO respo = this.tutoredService.updateTutored(tutoredDTO, (Long) authentication.getAttributes().get("userInfo"));
+            return HttpResponse.ok().body(respo);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return HttpResponse.badRequest().body(MentoringAPIError.builder()
+                    .status(HttpStatus.BAD_REQUEST.getCode())
+                    .error(e.getLocalizedMessage())
+                    .message(e.getMessage()).build());
+        }
     }
 
 
@@ -123,38 +127,18 @@ public class TutoredController extends BaseController {
     @Tag(name = "Mentee")
     @Post("/save")
     public HttpResponse<RestAPIResponse> create (@Body TutoredDTO tutoredDTO, Authentication authentication) {
-
         try {
             Tutored tutored = new Tutored(tutoredDTO);
-
 
             this.tutoredService.create(tutored, (Long) authentication.getAttributes().get("userInfo"));
 
             return HttpResponse.ok().body(new TutoredDTO(tutored));
-        } catch (PersistenceException e) {
-            Throwable rootCause = e.getCause();
-            if (rootCause instanceof SQLException) {
-                SQLException constraintViolationEx = (SQLException) rootCause;
-
-                String errorMessage = constraintViolationEx.getMessage();
-                String constraintName = extractConstraintName(errorMessage);
-                if (constraintName != null) {
-                    LOGGER.error("Violated constraint name: " + constraintName);
-                } else {
-                    LOGGER.error("No violated constraint name available.");
-                }
-                LOGGER.error("Constraint violation error: " + errorMessage);
-                // Handle the ConstraintViolationException as needed
-            } else {
-                // Handle other types of exceptions or re-throw the original exception
-                e.printStackTrace();
-            }
-            LOGGER.info("Error on saving mentees: {}", e.getMessage());
-            return HttpResponse.badRequest(
-                                    MentoringAPIError.builder()
-                                                    .status(HttpStatus.BAD_REQUEST.getCode())
-                                                    .error(e.getLocalizedMessage())
-                                                    .message(e.getMessage()).build());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return HttpResponse.badRequest().body(MentoringAPIError.builder()
+                    .status(HttpStatus.BAD_REQUEST.getCode())
+                    .error(e.getLocalizedMessage())
+                    .message(e.getMessage()).build());
         }
     }
 

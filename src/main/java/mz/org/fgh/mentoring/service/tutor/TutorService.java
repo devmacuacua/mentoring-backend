@@ -6,6 +6,7 @@ import mz.org.fgh.mentoring.entity.tutor.Tutor;
 import mz.org.fgh.mentoring.entity.user.User;
 import mz.org.fgh.mentoring.repository.employee.EmployeeRepository;
 import mz.org.fgh.mentoring.repository.location.LocationRepository;
+import mz.org.fgh.mentoring.repository.programaticarea.TutorProgrammaticAreaRepository;
 import mz.org.fgh.mentoring.repository.tutor.TutorRepository;
 import mz.org.fgh.mentoring.repository.user.UserRepository;
 import mz.org.fgh.mentoring.util.DateUtils;
@@ -30,13 +31,15 @@ public class TutorService {
     private EmployeeRepository employeeRepository;
     @Inject
     private LocationRepository locationRepository;
-
+    @Inject
+    private TutorProgrammaticAreaRepository tutorProgrammaticAreaRepository;
     @Inject
     private EmailService emailService;
 
-    public TutorService(TutorRepository tutorRepository, UserRepository userRepository) {
+    public TutorService(TutorRepository tutorRepository, UserRepository userRepository, TutorProgrammaticAreaRepository tutorProgrammaticAreaRepository) {
         this.tutorRepository = tutorRepository;
         this.userRepository = userRepository;
+        this.tutorProgrammaticAreaRepository = tutorProgrammaticAreaRepository;
     }
 
     public List<Tutor> findAll() {
@@ -56,6 +59,11 @@ public class TutorService {
            employeeRepository.createOrUpdate(tutor.getEmployee(), user);
            locationRepository.createOrUpdate(tutor.getEmployee().getLocations(), user);
            this.tutorRepository.save(tutor);
+           if(!tutor.getTutorProgrammaticAreas().isEmpty()){
+               tutor.getTutorProgrammaticAreas().forEach(it -> {
+                   tutorProgrammaticAreaRepository.createOrUpdate(it, user, tutor);
+               });
+           }
            generateMentorUser(tutor, user);
            return tutor;
    }
@@ -75,7 +83,7 @@ public class TutorService {
             user.setCreatedBy(creator.getUuid());
             user.setCreatedAt(DateUtils.getCurrentDate());
             userRepository.save(user);
-            sendmailToUser(user, password);
+            //sendmailToUser(user, password);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -119,7 +127,26 @@ public class TutorService {
     }
 
     public Tutor getTutorByEmployeeUuid(String uuid) {
-        return tutorRepository.findByEmployee(employeeRepository.findByUuid(uuid).get());
+        Tutor tutor = tutorRepository.findByEmployee(employeeRepository.findByUuid(uuid).get());
+        tutor.setTutorProgrammaticAreas(tutorProgrammaticAreaRepository.getAllByTutorId(tutor.getId()));
+        return tutor;
+    }
+
+    @Transactional
+    public Tutor update(Tutor tutor, Long userId) {
+        Optional<Tutor> t = tutorRepository.findByUuid(tutor.getUuid());
+        tutor.setCreatedAt(t.get().getCreatedAt());
+        tutor.setCreatedBy(t.get().getCreatedBy());
+        tutor.setLifeCycleStatus(t.get().getLifeCycleStatus());
+        tutor.setId(t.get().getId());
+
+        User user = userRepository.findById(userId).get();
+        tutor.setUpdatedBy(user.getUuid());
+        tutor.setUpdatedAt(DateUtils.getCurrentDate());
+        employeeRepository.createOrUpdate(tutor.getEmployee(), user);
+        locationRepository.createOrUpdate(tutor.getEmployee().getLocations(), user);
+        this.tutorRepository.update(tutor);
+        return tutor;
     }
 
     /*public Tutor findTutorByUserUuid(final String userUuid) {

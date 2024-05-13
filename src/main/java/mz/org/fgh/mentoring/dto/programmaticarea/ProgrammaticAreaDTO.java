@@ -1,5 +1,6 @@
 package mz.org.fgh.mentoring.dto.programmaticarea;
 
+import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Introspected;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +8,10 @@ import mz.org.fgh.mentoring.base.BaseEntityDTO;
 import mz.org.fgh.mentoring.dto.program.ProgramDTO;
 import mz.org.fgh.mentoring.entity.programaticarea.ProgrammaticArea;
 
-import java.io.Serializable;
-
 @Data
 @AllArgsConstructor
 @Introspected
-public class ProgrammaticAreaDTO extends BaseEntityDTO implements Serializable {
+public class ProgrammaticAreaDTO extends BaseEntityDTO {
 
     private Long id;
 
@@ -24,7 +23,13 @@ public class ProgrammaticAreaDTO extends BaseEntityDTO implements Serializable {
 
     private ProgramDTO program;
 
-    public ProgrammaticAreaDTO() {}
+    private ProgramDTO programDTO;
+
+    @Creator
+    public ProgrammaticAreaDTO() {
+        super();
+    }
+
     public ProgrammaticAreaDTO(ProgrammaticArea programmaticArea) {
         super(programmaticArea);
         this.id = programmaticArea.getId();

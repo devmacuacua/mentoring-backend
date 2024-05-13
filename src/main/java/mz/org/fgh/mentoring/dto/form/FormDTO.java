@@ -1,9 +1,9 @@
 package mz.org.fgh.mentoring.dto.form;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Creator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import mz.org.fgh.mentoring.base.BaseEntityDTO;
 import mz.org.fgh.mentoring.dto.partner.PartnerDTO;
 import mz.org.fgh.mentoring.dto.programmaticarea.ProgrammaticAreaDTO;
@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class FormDTO extends BaseEntityDTO {
 
@@ -42,6 +41,11 @@ public class FormDTO extends BaseEntityDTO {
     private Date createdAt;
 
     private String createdBy;
+
+    @Creator
+    public FormDTO() {
+        super();
+    }
 
     public FormDTO(Form form) {
         super(form);
@@ -82,6 +86,7 @@ public class FormDTO extends BaseEntityDTO {
         form.setTargetPatient(this.getTargetPatient());
         form.setCreatedAt(this.getCreatedAt());
         form.setCreatedBy(this.getCreatedBy());
+        form.setLifeCycleStatus(LifeCycleStatus.valueOf(this.getLifeCycleStatus()));
         if(this.getProgrammaticAreaDTO()!=null) {
             form.setProgrammaticArea(this.getProgrammaticAreaDTO().toProgrammaticArea());
         }

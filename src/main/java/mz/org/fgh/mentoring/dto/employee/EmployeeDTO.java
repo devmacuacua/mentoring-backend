@@ -1,7 +1,6 @@
 package mz.org.fgh.mentoring.dto.employee;
 
 import io.micronaut.core.annotation.Creator;
-import io.micronaut.core.annotation.Introspected;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import mz.org.fgh.mentoring.base.BaseEntityDTO;
@@ -13,10 +12,10 @@ import mz.org.fgh.mentoring.entity.location.Location;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @AllArgsConstructor
-@Introspected
 public class EmployeeDTO extends BaseEntityDTO {
 
     private String name;
@@ -62,5 +61,32 @@ public class EmployeeDTO extends BaseEntityDTO {
             locationDTOSet.add(new LocationDTO(location));
         }
         return locationDTOSet;
+    }
+
+    public Employee getEmployee() {
+        Employee employee = new Employee();
+        employee.setId(this.getId());
+        employee.setUuid(this.getUuid());
+        employee.setName(this.getName());
+        employee.setSurname(this.getSurname());
+        employee.setNuit(this.getNuit());
+        employee.setTrainingYear(this.getTrainingYear());
+        employee.setPhoneNumber(this.getPhoneNumber());
+        employee.setEmail(this.getEmail());
+        if(this.getProfessionalCategoryDTO()!=null) {
+            employee.setProfessionalCategory(this.getProfessionalCategoryDTO().getProfessionalCategory());
+        }
+        if(this.getPartnerDTO()!=null) {
+            employee.setPartner(this.partnerDTO.getPartner());
+        }
+        if(this.getLocationDTOSet()!=null && !this.getLocationDTOSet().isEmpty()) {
+            Set<Location> locations = new TreeSet<>();
+            for (LocationDTO locationDTO: this.getLocationDTOSet()) {
+                Location location = locationDTO.getLocation();
+                locations.add(location);
+            }
+            employee.setLocations(locations);
+        }
+        return employee;
     }
 }

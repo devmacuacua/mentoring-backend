@@ -25,7 +25,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
-public abstract class BaseEntity implements RestAPIResponse, Serializable {
+public abstract class BaseEntity implements RestAPIResponse, Serializable, Comparable<BaseEntity> {
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
@@ -72,6 +72,7 @@ public abstract class BaseEntity implements RestAPIResponse, Serializable {
     @Enumerated(EnumType.STRING)
     private LifeCycleStatus lifeCycleStatus;
 
+
     public BaseEntity(BaseEntityDTO baseEntityDTO) {
         this.setId(baseEntityDTO.getId());
         this.setUuid(baseEntityDTO.getUuid());
@@ -89,5 +90,10 @@ public abstract class BaseEntity implements RestAPIResponse, Serializable {
                 ", updatedAt=" + updatedAt +
                 ", lifeCycleStatus=" + lifeCycleStatus +
                 '}';
+    }
+
+    @Override
+    public int compareTo(BaseEntity o) {
+        return 0;
     }
 }
