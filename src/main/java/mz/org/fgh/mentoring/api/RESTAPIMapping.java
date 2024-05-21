@@ -54,6 +54,8 @@ public class RESTAPIMapping {
 
     public final static String MENTORSHIP = "mentorships";
 
+    public final static String SESSION_STATUS = "sessionStatuses";
+
     public final static String USER_ROLE_CONTROLLER = "userRoles";
 
     public final static String ROLE_CONTROLLER = "roles";

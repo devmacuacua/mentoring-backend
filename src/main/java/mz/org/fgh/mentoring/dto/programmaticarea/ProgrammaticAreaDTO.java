@@ -23,8 +23,6 @@ public class ProgrammaticAreaDTO extends BaseEntityDTO {
 
     private ProgramDTO program;
 
-    private ProgramDTO programDTO;
-
     @Creator
     public ProgrammaticAreaDTO() {
         super();

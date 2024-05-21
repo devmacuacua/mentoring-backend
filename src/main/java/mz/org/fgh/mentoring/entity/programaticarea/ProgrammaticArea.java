@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+@ToString
 public class ProgrammaticArea extends BaseEntity {
 
     @Column(name = "CODE", nullable = false, length = 50)
